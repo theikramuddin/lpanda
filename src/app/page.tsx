@@ -73,7 +73,7 @@ export default function Home() {
           <div className="hidden md:flex items-center gap-8">
             <NavLink href="#meme-gallery">Meme Gallery</NavLink>
             <NavLink href="#about">About</NavLink>
-            <NavLink href="#how-to-buy">How to Buy</NavLink>
+            {/* <NavLink href="#how-to-buy">How to Buy</NavLink> */}
             <NavLink href="#roadmap">Roadmap</NavLink>
           </div>
           <Button asChild className="bg-primary hover:bg-primary/80 text-primary-foreground">
@@ -104,9 +104,9 @@ export default function Home() {
                <Button asChild size="lg" variant="outline" className="text-lg py-6 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
                 <Link href="https://x.com/Lpandatoken">X</Link>
               </Button>
-              {/* <Button asChild size="lg" variant="outline" className="text-lg py-4 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
+              <Button asChild size="lg" variant="outline" className="text-lg py-4 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
                 <Link href="https://discord.gg/yuCfBCQy">DISCORD</Link>
-              </Button> */}
+              </Button>
             </div>
 
             <Card className="max-w-full mt-8 bg-card/50 border-2 border-dashed border-primary/50 w-full">
@@ -179,7 +179,7 @@ specialized niches, without compromise.</p>
         </section>
 
         {/* How to Buy Section */}
-        <section id="how-to-buy" className="py-24 max-w-4xl mx-auto">
+        {/* <section id="how-to-buy" className="py-24 max-w-4xl mx-auto">
           <h2 className="font-headline text-5xl text-primary mb-12 text-center">HOW DO I BUY YOUR LPANDA</h2>
           <div className="grid md:grid-cols-3 gap-8 text-left">
             <Card className="bg-card/50">
@@ -207,7 +207,7 @@ specialized niches, without compromise.</p>
               </CardContent>
             </Card>
           </div>
-        </section>
+        </section> */}
 
         {/* Roadmap Section */}
         <section id="roadmap" className="py-24 max-w-4xl mx-auto">
@@ -230,7 +230,7 @@ specialized niches, without compromise.</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>First CEX Listings</li>
                 <li>Partnerships with other retro projects</li>
-                <li>Claudeputer NFT Collection Drop</li>
+                <li>LPanda NFT Collection Drop</li>
                 <li>10,000+ Holders</li>
               </ul>
             </div>
