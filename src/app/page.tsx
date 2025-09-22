@@ -5,9 +5,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Bot, Send, BookCopy, Cpu } from 'lucide-react';
-import React from 'react';
+import { Bot, Send, BookCopy, Cpu, ClipboardCopy, Check } from 'lucide-react';
+import React, { useState } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { QRCodeSVG } from "qrcode.react";
+
 
 const NavLink = ({ href, children }: { href: string, children: React.ReactNode }) => (
   <Link href={href} className="text-lg hover:text-primary transition-colors">
@@ -50,8 +61,40 @@ const DexScreenerEmbed = () => (
   </div>
 );
 
+const tokenomicsData = [
+  { name: 'Public Sale', value: 12, tokens: '120M' },
+  { name: 'Private Contributors', value: 10, tokens: '100M' },
+  { name: 'Team & Advisors', value: 16, tokens: '160M' },
+  { name: 'Ecosystem/Collaborations', value: 18, tokens: '180M' },
+  { name: 'Community Incentives', value: 24, tokens: '240M' },
+  { name: 'Treasury', value: 15, tokens: '150M' },
+  { name: 'Marketing & Liquidity', value: 5, tokens: '50M' },
+];
+
+const tokenomicsCardsData = [
+    { name: 'Public Sale', value: '12%' },
+    { name: 'Private Contributors', value: '10%' },
+    { name: 'Team & Advisors', value: '16%' },
+    { name: 'Ecosystem/ Collaborations', value: '18%' },
+    { name: 'Community Incentives', value: '24%' },
+    { name: 'Treasury', value: '15%' },
+    { name: 'Marketing & Liquidity', value: '5%' },
+];
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658'];
+
 export default function Home() {
-  const contractAddress = "COMING SOON..............";
+  const contractAddress = "0x96443bb469a6b95463e8d671878e3f77c18bcfcc";
+  const ownerWalletAddress = "0x96443bb469a6b95463e8d671878e3f77c18bcfcc"; // TODO: Replace with your wallet address
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   const memeImages = [
     "https://res.cloudinary.com/ds0ifdrhk/image/upload/v1758191541/WhatsApp_Image_2025-09-18_at_2.30.40_AM_1_gnmyco.jpg",
     "https://res.cloudinary.com/ds0ifdrhk/image/upload/v1758191541/WhatsApp_Image_2025-09-18_at_2.30.40_AM_tqgt3x.jpg",
@@ -60,6 +103,31 @@ export default function Home() {
     "https://res.cloudinary.com/ds0ifdrhk/image/upload/v1758191539/WhatsApp_Image_2025-09-18_at_2.30.41_AM_1_pmffhh.jpg",
     "https://res.cloudinary.com/ds0ifdrhk/image/upload/v1758191539/WhatsApp_Image_2025-09-18_at_2.30.41_AM_ac6c12.jpg"
   ];
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.35;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const label = tokenomicsData[index].name;
+    const words = label.replace('/', '/ ').split(' ');
+
+    if (words.length > 1 && (label.length > 10 || label.includes('/'))) {
+        return (
+            <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize="10">
+                {words.map((word, i) => (
+                    <tspan key={i} x={x} dy={i === 0 ? 0 : 12}>{word}</tspan>
+                ))}
+            </text>
+        );
+    }
+
+    return (
+      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize="10">
+        {label}
+      </text>
+    );
+  };
 
 
   return (
@@ -73,11 +141,11 @@ export default function Home() {
           <div className="hidden md:flex items-center gap-8">
             <NavLink href="#meme-gallery">Meme Gallery</NavLink>
             <NavLink href="#about">About</NavLink>
-            {/* <NavLink href="#how-to-buy">How to Buy</NavLink> */}
             <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="#how-to-buy">How to Buy</NavLink>
           </div>
           <Button asChild className="bg-primary hover:bg-primary/80 text-primary-foreground">
-            <Link href="#">Buy Now</Link>
+            <Link href="#how-to-buy">Buy Now</Link>
           </Button>
         </nav>
       </header>
@@ -96,16 +164,16 @@ export default function Home() {
             
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="text-lg py-6">
-                  <Link href="#">BUY LPANDA</Link>
+                  <Link href="#how-to-buy">BUY LPANDA</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="text-lg py-6 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
-                  <Link href="https://t.me/Lpanda_decentralized">TELEGRAM</Link>
+                  <a href="https://t.me/Lpanda_decentralized" target="_blank" rel="noopener noreferrer">TELEGRAM</a>
               </Button>
                <Button asChild size="lg" variant="outline" className="text-lg py-6 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
-                <Link href="https://x.com/Lpandatoken">X</Link>
+                <a href="https://x.com/Lpandatoken" target="_blank" rel="noopener noreferrer">X</a>
               </Button>
-              <Button asChild size="lg" variant="outline" className="text-lg py-4 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
-                <Link href="https://discord.gg/yuCfBCQy">DISCORD</Link>
+              <Button asChild size="lg" variant="outline" className="text-lg py-6 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
+                <a href="https://discord.gg/yuCfBCQy" target="_blank" rel="noopener noreferrer">DISCORD</a>
               </Button>
             </div>
 
@@ -129,6 +197,70 @@ export default function Home() {
               priority
             />
           </div>
+        </section>
+
+        {/* How to Buy Section */}
+        <section id="how-to-buy" className="py-24 max-w-2xl mx-auto">
+          <h2 className="font-headline text-5xl text-primary mb-12 text-center">How to Buy LPANDA</h2>
+          <Card className="bg-card/50 border-2 border-primary/50">
+            <CardContent className="p-8 text-center flex flex-col items-center">
+              <p className="text-muted-foreground mb-4">Send ETH to the following address to buy $LPANDA tokens.</p>
+              
+              <div className="bg-background/50 rounded-lg p-4 mb-6">
+                <QRCodeSVG
+                  value={ownerWalletAddress}
+                  size={128}
+                  bgColor="hsl(var(--background))"
+                  fgColor="hsl(var(--foreground))"
+                  level="L"
+                  className="rounded-md"
+                />
+              </div>
+
+              <p className="text-muted-foreground text-sm mb-2">Owner's Wallet Address:</p>
+              <div className="relative w-full max-w-md">
+                <input
+                  type="text"
+                  readOnly
+                  value={ownerWalletAddress}
+                  className="w-full bg-input border border-border rounded-md p-2 pr-12 font-mono text-sm text-foreground"
+                />
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                  onClick={() => copyToClipboard(ownerWalletAddress)}
+                >
+                  {copied ? <Check className="w-4 h-4 text-green-500" /> : <ClipboardCopy className="w-4 h-4" />}
+                </Button>
+              </div>
+
+              <a href={`ethereum:${ownerWalletAddress}`} className="w-full max-w-md">
+                <Button size="lg" className="mt-6 text-lg py-6 w-full">
+                  Buy with Wallet
+                </Button>
+              </a>
+
+              <div className="text-left mt-8 space-y-4 text-muted-foreground">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</div>
+                  <p>Click the "Buy with Wallet" button, or copy the address above, or scan the QR code.</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
+                  <p>Open your preferred crypto wallet (e.g., MetaMask, Trust Wallet).</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</div>
+                  <p>Paste the address and enter the amount of ETH you wish to contribute.</p>
+                </div>
+                 <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</div>
+                  <p>Confirm the transaction. Your $LPANDA tokens will be airdropped to your wallet after the presale ends.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         {/* Meme Gallery Section */}
@@ -178,72 +310,248 @@ specialized niches, without compromise.</p>
           </div>
         </section>
 
-        {/* How to Buy Section */}
-        {/* <section id="how-to-buy" className="py-24 max-w-4xl mx-auto">
-          <h2 className="font-headline text-5xl text-primary mb-12 text-center">HOW DO I BUY YOUR LPANDA</h2>
-          <div className="grid md:grid-cols-3 gap-8 text-left">
-            <Card className="bg-card/50">
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl text-accent">1. CREATE A WALLET</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Download a crypto wallet like MetaMask or Phantom. Keep your seed phrase safer than a high score on Pac-Man.</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50">
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl text-accent">2. GET SOME SOL</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>You'll need some BASE COIN in your wallet to swap for LPANDA. Get it from a centralized exchange or a friend who owes you one.</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card/50">
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl text-accent">3. SWAP FOR LPANDA</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Go to Uniswap, paste the LPANDA contract address, and swap your BASE COIN. Welcome to the mainframe.</p>
-              </CardContent>
-            </Card>
+        {/* Tokenomics Section */}
+        <section id="tokenomics" className="py-24 max-w-6xl mx-auto">
+          <h2 className="font-headline text-5xl text-primary mb-12 text-center">TOKENOMICS</h2>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="w-full h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={tokenomicsData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={150}
+                    fill="#8884d8"
+                    dataKey="value"
+                    paddingAngle={5}
+                  >
+                    {tokenomicsData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      background: "hsl(var(--background))",
+                      borderColor: "hsl(var(--border))",
+                      borderRadius: "var(--radius)",
+                    }}
+                    formatter={(value, name) => [`${value}%`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="space-y-4">
+              <Table className="bg-card/50">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-headline text-accent">Allocation</TableHead>
+                    <TableHead className="font-headline text-accent text-right">Percentage</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tokenomicsData.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium flex items-center gap-2">
+                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                      {item.name}
+                    </TableCell>
+                    <TableCell className="text-right">{item.value}%</TableCell>
+                  </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <p className="text-center text-muted-foreground mt-4">Total Supply: 1,000,000,000 LPANDA</p>
+            </div>
           </div>
-        </section> */}
+        </section>
+        
+        {/* Token Distribution Section */}
+        <section id="token-distribution" className="py-24 max-w-4xl mx-auto">
+          <h2 className="font-headline text-5xl text-primary mb-12 text-center">Token Distribution</h2>
+          <p className="text-center text-2xl text-muted-foreground mb-12">Total Supply: 1,000,000,000 LPANDA</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tokenomicsCardsData.map((item, index) => (
+              <div
+                key={index}
+                className="p-1 rounded-lg"
+                style={{ background: 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)))' }}
+              >
+                <div className="bg-background rounded-md p-6 h-full flex flex-col justify-center">
+                  <p className="text-lg text-foreground/80 break-words">{item.name}</p>
+                  <p className="text-2xl font-bold text-primary">{item.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
 
         {/* Roadmap Section */}
-        <section id="roadmap" className="py-24 max-w-4xl mx-auto">
+        <section id="roadmap" className="py-24 max-w-6xl mx-auto">
           <h2 className="font-headline text-5xl text-primary mb-12 text-center">LPANDA ROADMAP</h2>
-          <div className="relative border-l-2 border-primary/50 pl-8 space-y-16">
-            <div className="absolute -left-[11px] top-0 h-5 w-5 rounded-full bg-accent animate-pulse"></div>
-            
-            <div className="text-left">
-              <h3 className="font-headline text-3xl text-accent mb-2">Phase 1: Boot Sequence</h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Launch LPANDA Token</li>
-                <li>Website V1 Launch</li>
-                <li>Community Building on X & Telegram</li>
-                <li>CoinGecko/CoinMarketCap Listing</li>
-              </ul>
-            </div>
-
-            <div className="text-left">
-              <h3 className="font-headline text-3xl text-accent mb-2">Phase 2: Overclock</h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>First CEX Listings</li>
-                <li>Partnerships with other retro projects</li>
-                <li>LPanda NFT Collection Drop</li>
-                <li>10,000+ Holders</li>
-              </ul>
-            </div>
-
-            <div className="text-left">
-              <h3 className="font-headline text-3xl text-accent mb-2">Phase 3: Mainframe Integration</h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Top Tier CEX Listings</li>
-                <li>Develop a simple retro P2E game</li>
-                <li>IRL Merch Store</li>
-                <li>Global Domination (in a friendly way)</li>
-              </ul>
-            </div>
+          <div className="overflow-x-auto">
+            <Table className="w-full text-left bg-card/50">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-headline text-accent w-1/4">Timeline</TableHead>
+                  <TableHead className="font-headline text-accent w-1/4">Technical & Protocol Development</TableHead>
+                  <TableHead className="font-headline text-accent w-1/4">Ecosystem & Growth</TableHead>
+                  <TableHead className="font-headline text-accent w-1/4">Community & DAO Governance</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-bold">Q3 2025<br/><span className="font-normal text-muted-foreground">Phase 1: The Genesis Grove</span></TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Mainnet Beta Launch</li>
+                      <li>Bamboo Consensus (PoSA)</li>
+                      <li>Native Staking & Delegation</li>
+                      <li>Comprehensive Security Audit</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Seedling Listings</li>
+                      <li>DEX Listings on Base & Ethereum</li>
+                      <li>Tier 1 CEX Applications Submitted</li>
+                      <li>Initial Liquidity Partnerships</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>The First Council</li>
+                      <li>Genesis NFT Airdrop to Early Holders</li>
+                      <li>LPanda Ambassador Program Launch</li>
+                      <li>Litepaper v2 Publication</li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">Q4 2025<br/><span className="font-normal text-muted-foreground">Phase 2: Strengthening the Roots</span></TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Cross-Chain Canopy Bridges</li>
+                      <li>Bridges to Ethereum & BSC Live</li>
+                      <li>Bridge Security Audit Completion</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>The Grove Grant Program</li>
+                      <li>$500k Ecosystem Fund Established</li>
+                      <li>First 3 dApps Funded & Onboarded</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>DAO Governance v1: The Panda Council</li>
+                      <li>Snapshot Voting Live</li>
+                      <li>First Community Treasury Proposal</li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">Q1 2026<br/><span className="font-normal text-muted-foreground">Phase 3: The Great Expansion</span></TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>zk-Rollup Testnet: "Pandascale"</li>
+                      <li>Testnet Release</li>
+                      <li>SDK & Developer Toolkit Launch</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Tier 1 CEX Listing</li>
+                      <li>Major Top-10 Exchange Listing</li>
+                      <li>Strategic DeFi Partnership Announcements</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Global Hackathon: "Build the Grove"</li>
+                      <li>$100k Prize Pool</li>
+                      <li>Focus on DeFi & Gaming dApps</li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">Q2 2026<br/><span className="font-normal text-muted-foreground">Phase 4: Ecosystem Flourish</span></TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Mainnet Upgrade: "The Pandamonium Fork"</li>
+                      <li>zk-Rollup Mainnet Activation</li>
+                      <li>{'>'}90% Reduction in Gas Fees</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>dApp Incubator Program</li>
+                      <li>10+ Live dApps on Network</li>
+                      <li>Native DEX: "PandaSwap" Launch</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Token Utility Expansion</li>
+                      <li>NFT Marketplace: "Bamboo Gallery"</li>
+                      <li>$LPANDA Merch Store Integration</li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">Q3 2026<br/><span className="font-normal text-muted-foreground">Phase 5: Optimizing the Realm</span></TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Layer 2 Scaling & Data Availability</li>
+                      <li>Advanced Data Availability Layer</li>
+                      <li>Enhanced Throughput (10k+ TPS)</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Enterprise Outreach: "Whitelabel Jungle"</li>
+                      <li>B2B Blockchain Solutions</li>
+                      <li>Public API Suite Release</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Governance v2: On-Chain Democracy</li>
+                      <li>On-Chain Voting Implementation</li>
+                      <li>Community Treasury Management Live</li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-bold">Q4 2026<br/><span className="font-normal text-muted-foreground">Phase 6: The Sovereign Grove</span></TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>LPanda 2.0 Vision Paper</li>
+                      <li>Research into AI Integration & Privacy</li>
+                      <li>Long-term Tech Vision Published</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Mass Adoption Campaign</li>
+                      <li>Target: 1M+ Active Wallet Addresses</li>
+                      <li>Global Marketing Initiatives</li>
+                    </ul>
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Full Decentralization</li>
+                      <li>Core Team Token Lock & Vesting</li>
+                      <li>Community-Led Foundation Established</li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </section>
 
@@ -269,6 +577,33 @@ specialized niches, without compromise.</p>
     
 
     
+
+    
+
+    
+
+    
+
+
+
+
+
+    
+
+
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+
 
     
 
