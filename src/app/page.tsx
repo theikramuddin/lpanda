@@ -84,8 +84,8 @@ const tokenomicsCardsData = [
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658'];
 
 export default function Home() {
-  const contractAddress = "0x96443bb469a6b95463e8d671878e3f77c18bcfcc";
-  const ownerWalletAddress = "0x96443bb469a6b95463e8d671878e3f77c18bcfcc"; // TODO: Replace with your wallet address
+  const contractAddress = "0xc67BF6Ef5f9fFC12FaFeA1AaEAd9a359F044bEF3";
+  const ownerWalletAddress = "0xc67BF6Ef5f9fFC12FaFeA1AaEAd9a359F044bEF3"; // TODO: Replace with your wallet address
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = (text: string) => {
@@ -235,11 +235,15 @@ export default function Home() {
                 </Button>
               </div>
 
-              <a href={`ethereum:${ownerWalletAddress}`} className="w-full max-w-md">
-                <Button size="lg" className="mt-6 text-lg py-6 w-full">
+              <div className="w-full max-w-md mt-6">
+                <Button 
+                  size="lg" 
+                  className="text-lg py-6 w-full"
+                  onClick={() => window.location.href = `ethereum:${ownerWalletAddress}`}
+                >
                   Buy with Wallet
                 </Button>
-              </a>
+              </div>
 
               <div className="text-left mt-8 space-y-4 text-muted-foreground">
                 <div className="flex gap-4">
@@ -604,6 +608,8 @@ specialized niches, without compromise.</p>
     
 
 
+
+    
 
     
 
