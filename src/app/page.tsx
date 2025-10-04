@@ -170,10 +170,10 @@ export default function Home() {
                   <a href="https://t.me/Lpanda_decentralized" target="_blank" rel="noopener noreferrer">TELEGRAM</a>
               </Button>
                <Button asChild size="lg" variant="outline" className="text-lg py-6 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
-                <a href="https://x.com/Lpandatoken" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="http://x.com/LPandaDEX" target="_blank" rel="noopener noreferrer">X</a>
               </Button>
               <Button asChild size="lg" variant="outline" className="text-lg py-6 border-2 border-foreground hover:bg-accent hover:text-accent-foreground">
-                <a href="https://discord.gg/yuCfBCQy" target="_blank" rel="noopener noreferrer">DISCORD</a>
+                <a href="https://discord.gg/PQvGZP9V6B" target="_blank" rel="noopener noreferrer">DISCORD</a>
               </Button>
             </div>
 
