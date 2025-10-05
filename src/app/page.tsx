@@ -199,8 +199,15 @@ export default function Home() {
           </div>
         </section>
 
+        <Card className="max-w-half mt-5 bg-card/50 border-2 border-dashed border-primary text-center">
+              <CardContent className="p-4">
+                <p className="text-muted-foreground text-sm">This is a private sale for private contributors, if you're interested in being a private contributor, kindly reach out to 👉 <a href="https://t.me/@ADSactly007">t.me/@ADSactly007</a> or <a href="https://t.me/MOD_MIKKYeth">t.me/MOD_MIKKYeth</a></p>
+                
+              </CardContent>
+            </Card>
+
         {/* How to Buy Section */}
-        <section id="how-to-buy" className="py-24 max-w-2xl mx-auto">
+        <section id="how-to-buy" className="py-20 max-w-2xl mx-auto">
           <h2 className="font-headline text-5xl text-primary mb-12 text-center">How to Buy LPANDA</h2>
           <Card className="bg-card/50 border-2 border-primary/50">
             <CardContent className="p-8 text-center flex flex-col items-center">
@@ -568,6 +575,14 @@ specialized niches, without compromise.</p>
             </CardContent>
           </Card>
         </section>
+
+            <Card className="max-w-half mt-5 bg-card/50 border-2 border-dashed border-primary text-center">
+              <CardContent className="p-4">
+                <p className="text-muted-foreground text-sm">Disclaimer: This roadmap is a strategic guide. All dates, features, and initiatives are subject to change based on technical feasibility, market conditions, and community governance decisions. We commit to maintaining transparent and regular communication with our community regarding our progress.</p>
+                
+              </CardContent>
+            </Card>
+
       </main>
 
       <footer className="w-full text-center py-8 mt-12 border-t border-primary/20">
